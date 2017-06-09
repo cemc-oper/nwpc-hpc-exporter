@@ -1,0 +1,6 @@
+global:
+  auth:
+    host: some host
+    port: port number
+    user: user name
+    password: password
