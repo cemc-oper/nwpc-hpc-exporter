@@ -1,10 +1,10 @@
-from prometheus_client import start_http_server, Gauge
 import time
+
 import click
 import yaml
+from prometheus_client import start_http_server, Gauge
 
-from nwpc_hpc_exporter.disk_usage_collector import get_disk_usage
-
+from nwpc_hpc_exporter.disk_usage.collector import get_disk_usage
 
 item_map = {
     'block_limits': [

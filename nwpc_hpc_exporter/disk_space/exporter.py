@@ -1,10 +1,10 @@
-from nwpc_hpc_exporter.disk_space_collector import get_disk_space
-from prometheus_client import start_http_server, Gauge
-import random
 import time
-import datetime
+
 import click
 import yaml
+from prometheus_client import start_http_server, Gauge
+
+from nwpc_hpc_exporter.disk_space.collector import get_disk_space
 
 item_list = [
     'gb_blocks',
