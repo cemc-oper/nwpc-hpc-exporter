@@ -98,14 +98,3 @@ def get_disk_usage(auth) -> dict:
     quota_result['file_systems'] = file_system_list
     quota_result['user'] = auth['user']
     return quota_result
-
-
-if __name__ == "__main__":
-    auth = {
-        'host': 'uranus.hpc.nmic.cn',
-        'port': 22,
-        'user': 'wangdp',
-        'password': 'perilla'
-    }
-    disk_usage_result = get_disk_usage(auth)
-    print(json.dumps(disk_usage_result, indent=2))

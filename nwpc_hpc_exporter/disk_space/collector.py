@@ -69,14 +69,3 @@ def get_disk_space(auth) -> dict:
 
     disk_space_result['file_systems'] = file_system_list
     return disk_space_result
-
-
-if __name__ == "__main__":
-    auth = {
-        'host': 'uranus.hpc.nmic.cn',
-        'port': 22,
-        'user': 'wangdp',
-        'password': 'perilla'
-    }
-    disk_space_result = get_disk_space(auth)
-    print(json.dumps(disk_space_result, indent=2))
