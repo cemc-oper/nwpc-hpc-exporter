@@ -1,0 +1,9 @@
+global:
+
+tasks:
+  - name: task_name
+    auth:
+      host: host
+      port: port number
+      user: user name
+      password: user password
