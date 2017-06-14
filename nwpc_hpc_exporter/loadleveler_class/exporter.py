@@ -50,7 +50,7 @@ def process_request(task):
 def main(config_file):
     config = load_config(config_file)
 
-    start_http_server(8000)
+    start_http_server(config['global']['exporter']['port'])
 
     category_list = config['category_list']
     gauge_map = {

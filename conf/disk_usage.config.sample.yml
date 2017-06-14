@@ -1,4 +1,6 @@
 global:
+  exporter:
+    port: port number
 
 tasks:
   - name: task_name

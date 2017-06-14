@@ -50,7 +50,7 @@ def process_request(config):
 def main(config_file):
     config = load_config(config_file)
 
-    start_http_server(8000)
+    start_http_server(config['global']['exporter']['port'])
 
     while True:
         process_request(config)

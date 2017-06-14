@@ -44,7 +44,7 @@ def process_request(tasks):
 def main(config_file):
     config = load_config(config_file)
 
-    start_http_server(8000)
+    start_http_server(config['global']['exporter']['port'])
 
     tasks_config = config['tasks']
     tasks = []

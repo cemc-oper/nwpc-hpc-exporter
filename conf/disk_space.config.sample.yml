@@ -1,4 +1,6 @@
 global:
+  exporter:
+    port: port number
   auth:
     host: some host
     port: port number
