@@ -17,7 +17,6 @@ def run_df_command(client) -> (str,str):
     stdin, stdout, stderr = client.exec_command(command)
     std_out_string = stdout.read().decode('UTF-8')
     std_error_out_string = stderr.read().decode('UTF-8')
-    client.close()
 
     return std_out_string, std_error_out_string
 

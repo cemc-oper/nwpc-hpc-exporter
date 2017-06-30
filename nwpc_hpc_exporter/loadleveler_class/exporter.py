@@ -5,7 +5,7 @@ import click
 import yaml
 from prometheus_client import start_http_server, Gauge
 
-from nwpc_hpc_exporter.loadleveler_class.collector import get_result
+from nwpc_hpc_exporter.loadleveler_class.collector import get_result, get_ssh_client
 
 item = [
     'free_slots',
@@ -31,7 +31,7 @@ def find_prop_by_id(item, prop_id):
 
 def process_request(task):
     t = 5
-    result = get_result(task['auth'], task['category_list'])
+    result = get_result(task['client'], task['category_list'])
     for a_class in result['items']:
         class_prop_item = find_prop_by_id(a_class, task['identify_category_id'])
 
@@ -58,10 +58,12 @@ def main(config_file):
             'hpc_loadleveler_class_' + an_item, an_item, ['class_name']
         ) for an_item in config['metrics_item']
     }
+    client = get_ssh_client(config['global']['auth'])
     task = {
         'gauge_map': gauge_map,
         'category_list': category_list,
         'auth': config['global']['auth'],
+        'client': client,
         'metrics_item': config['metrics_item'],
         'identify_category_id': config['identify_category_id']
     }

@@ -4,7 +4,7 @@ import click
 import yaml
 from prometheus_client import start_http_server, Gauge
 
-from nwpc_hpc_exporter.disk_usage.collector import get_disk_usage
+from nwpc_hpc_exporter.disk_usage.collector import get_disk_usage, get_ssh_client
 
 item_map = {
     'block_limits': [
@@ -26,8 +26,9 @@ def process_request(tasks):
     t = 5
     for a_task in tasks:
         auth = a_task['auth']
+        client = a_task['client']
 
-        disk_space_result = get_disk_usage(auth)
+        disk_space_result = get_disk_usage(auth, client)
 
         for a_file_system in disk_space_result['file_systems']:
             block_limits = a_file_system['block_limits']
@@ -54,9 +55,11 @@ def main(config_file):
                 'hpc_' + a_task['name'] + '_disk_usage_block_limit_' + an_item, an_item, ['file_system']
             ) for an_item in item_map['block_limits']
         }
+        client = get_ssh_client(a_task['auth'])
         tasks.append({
             'name': a_task['name'],
             'auth': a_task['auth'],
+            'client': client,
             'block_limits_gauge_map': block_limits_gauge_map
         })
 

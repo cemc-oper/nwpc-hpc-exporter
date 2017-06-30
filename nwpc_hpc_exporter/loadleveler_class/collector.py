@@ -23,23 +23,25 @@ def build_category_list(category_list_config):
     return category_list
 
 
-def run_command(auth) -> (str,str):
+def get_ssh_client(auth):
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     client.connect(auth['host'], auth['port'], auth['user'], auth['password'])
+    return client
 
+
+def run_command(client) -> (str,str):
     command = "/usr/bin/llclass -l"
 
     stdin, stdout, stderr = client.exec_command(command)
     std_out_string = stdout.read().decode('UTF-8')
     std_error_out_string = stderr.read().decode('UTF-8')
-    client.close()
 
     return std_out_string, std_error_out_string
 
 
-def get_result(auth, category_list) -> dict:
-    std_out_string, std_error_out_string = run_command(auth)
+def get_result(client, category_list) -> dict:
+    std_out_string, std_error_out_string = run_command(client)
     result_lines = std_out_string.split("\n")
 
     category_list = build_category_list(category_list)

@@ -4,23 +4,25 @@ import json
 from paramiko import SSHClient, AutoAddPolicy
 
 
-def run_cmquota_command(auth) -> (str,str):
+def get_ssh_client(auth):
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     client.connect(auth['host'], auth['port'], auth['user'], auth['password'])
+    return client
 
+
+def run_cmquota_command(client) -> (str,str):
     command = "/cma/u/app/sys_bin/cmquota ${USER}"
 
     stdin, stdout, stderr = client.exec_command(command)
     std_out_string = stdout.read().decode('UTF-8')
     std_error_out_string = stderr.read().decode('UTF-8')
-    client.close()
 
     return std_out_string, std_error_out_string
 
 
-def get_disk_usage(auth) -> dict:
-    std_out_string, std_error_out_string = run_cmquota_command(auth)
+def get_disk_usage(auth, client) -> dict:
+    std_out_string, std_error_out_string = run_cmquota_command(client)
     result_lines = std_out_string.split("\n")
 
     detail_pattern = r'^(\w+) +(\w+) +(\d+) +(\d+) +(\d+) +(\d+) +(.+) \| +(\d+) +(\d+) +(\d+) +(\d+) +(\w+) +(.+)'
