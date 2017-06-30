@@ -4,7 +4,7 @@ import click
 import yaml
 from prometheus_client import start_http_server, Gauge
 
-from nwpc_hpc_exporter.disk_space.collector import get_disk_space
+from nwpc_hpc_exporter.disk_space.collector import get_disk_space, get_ssh_client
 
 item_list = [
     'gb_blocks',
@@ -31,8 +31,9 @@ def load_config(config_file):
 
 def process_request(config):
     auth = config['global']['auth']
+    client = get_ssh_client(auth)
     t = 5
-    disk_space_result = get_disk_space(auth)
+    disk_space_result = get_disk_space(client)
 
     for a_file_system in disk_space_result['file_systems']:
         for an_item in item_list:

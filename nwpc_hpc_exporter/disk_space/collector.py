@@ -4,11 +4,14 @@ import json
 from paramiko import SSHClient, AutoAddPolicy
 
 
-def run_df_command(auth) -> (str,str):
+def get_ssh_client(auth):
     client = SSHClient()
     client.set_missing_host_key_policy(AutoAddPolicy())
     client.connect(auth['host'], auth['port'], auth['user'], auth['password'])
+    return client
 
+
+def run_df_command(client) -> (str,str):
     command = '/usr/bin/df -g'
 
     stdin, stdout, stderr = client.exec_command(command)
@@ -19,8 +22,8 @@ def run_df_command(auth) -> (str,str):
     return std_out_string, std_error_out_string
 
 
-def get_disk_space(auth) -> dict:
-    std_out_string, std_error_out_string = run_df_command(auth)
+def get_disk_space(client) -> dict:
+    std_out_string, std_error_out_string = run_df_command(client)
     result_lines = std_out_string.split("\n")
 
     detail_pattern = r'^(\S+) +(\S+) +(\S+) +(\S+) +(\S+) +(\S+) +(\S+)'
