@@ -4,6 +4,7 @@ import time
 import click
 import yaml
 from prometheus_client import start_http_server, Gauge
+import paramiko
 
 from nwpc_hpc_exporter.loadleveler_class.collector import get_result, get_ssh_client
 
@@ -69,7 +70,10 @@ def main(config_file):
     }
 
     while True:
-        process_request(task)
+        try:
+            process_request(task)
+        except paramiko.ssh_exception.SSHException as ssh_exception:
+            task['client'] = get_ssh_client(config['global']['auth'])
 
 
 if __name__ == '__main__':

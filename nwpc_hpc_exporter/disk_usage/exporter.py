@@ -3,6 +3,7 @@ import time
 import click
 import yaml
 from prometheus_client import start_http_server, Gauge
+import paramiko
 
 from nwpc_hpc_exporter.disk_usage.collector import get_disk_usage, get_ssh_client
 
@@ -28,14 +29,16 @@ def process_request(tasks):
         auth = a_task['auth']
         client = a_task['client']
 
-        disk_space_result = get_disk_usage(auth, client)
-
-        for a_file_system in disk_space_result['file_systems']:
-            block_limits = a_file_system['block_limits']
-            for an_item in item_map['block_limits']:
-                a_task['block_limits_gauge_map'][an_item].labels(
-                    file_system=a_file_system['file_system']
-                ).set(block_limits[an_item])
+        try:
+            disk_space_result = get_disk_usage(auth, client)
+            for a_file_system in disk_space_result['file_systems']:
+                block_limits = a_file_system['block_limits']
+                for an_item in item_map['block_limits']:
+                    a_task['block_limits_gauge_map'][an_item].labels(
+                        file_system=a_file_system['file_system']
+                    ).set(block_limits[an_item])
+        except paramiko.ssh_exception.SSHException as ssh_exception:
+            a_task['client'] = get_ssh_client(auth)
 
     time.sleep(t)
 

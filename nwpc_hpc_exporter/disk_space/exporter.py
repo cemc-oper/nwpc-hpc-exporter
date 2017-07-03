@@ -2,6 +2,7 @@ import time
 
 import click
 import yaml
+import paramiko
 from prometheus_client import start_http_server, Gauge
 
 from nwpc_hpc_exporter.disk_space.collector import get_disk_space, get_ssh_client
@@ -29,9 +30,7 @@ def load_config(config_file):
     return config
 
 
-def process_request(config):
-    auth = config['global']['auth']
-    client = get_ssh_client(auth)
+def process_request(client):
     t = 5
     disk_space_result = get_disk_space(client)
 
@@ -53,8 +52,14 @@ def main(config_file):
 
     start_http_server(config['global']['exporter']['port'])
 
+    auth = config['global']['auth']
+    client = get_ssh_client(auth)
+
     while True:
-        process_request(config)
+        try:
+            process_request(client)
+        except paramiko.ssh_exception.SSHException as ssh_exception:
+            client = get_ssh_client(auth)
 
 
 if __name__ == '__main__':
