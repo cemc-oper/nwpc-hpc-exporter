@@ -1,4 +1,5 @@
 import time
+import datetime
 
 import click
 import yaml
@@ -59,7 +60,7 @@ def main(config_file):
         try:
             process_request(client)
         except paramiko.ssh_exception.SSHException as ssh_exception:
-            print("reconnect ssh")
+            print(datetime.datetime.now(), "reconnect ssh")
             client = get_ssh_client(auth)
 
 
