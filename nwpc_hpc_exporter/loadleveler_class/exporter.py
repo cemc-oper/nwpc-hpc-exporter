@@ -60,7 +60,10 @@ def main(config_file):
             'hpc_loadleveler_class_' + an_item, an_item, ['class_name']
         ) for an_item in config['metrics_item']
     }
+
+    print('getting ssh client...')
     client = get_ssh_client(config['global']['auth'])
+
     task = {
         'gauge_map': gauge_map,
         'category_list': category_list,
@@ -70,6 +73,7 @@ def main(config_file):
         'identify_category_id': config['identify_category_id']
     }
 
+    print('exporter is working...')
     while True:
         try:
             process_request(task)

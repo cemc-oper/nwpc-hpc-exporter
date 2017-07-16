@@ -53,6 +53,7 @@ def main(config_file):
     start_http_server(config['global']['exporter']['port'])
 
     tasks_config = config['tasks']
+    print('getting ssh client...')
     tasks = []
     for a_task in tasks_config:
         block_limits_gauge_map = {
@@ -68,6 +69,7 @@ def main(config_file):
             'block_limits_gauge_map': block_limits_gauge_map
         })
 
+    print('exporter is working...')
     while True:
         process_request(tasks)
 

@@ -54,8 +54,10 @@ def main(config_file):
     start_http_server(config['global']['exporter']['port'], addr='0.0.0.0')
 
     auth = config['global']['auth']
+    print('getting ssh client...')
     client = get_ssh_client(auth)
 
+    print('exporter is working...')
     while True:
         try:
             process_request(client)
