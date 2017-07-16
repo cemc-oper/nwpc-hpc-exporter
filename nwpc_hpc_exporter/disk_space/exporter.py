@@ -51,7 +51,7 @@ def process_request(client):
 def main(config_file):
     config = load_config(config_file)
 
-    start_http_server(config['global']['exporter']['port'])
+    start_http_server(config['global']['exporter']['port'], addr='0.0.0.0')
 
     auth = config['global']['auth']
     client = get_ssh_client(auth)
