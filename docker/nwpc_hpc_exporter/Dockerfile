@@ -1,6 +1,6 @@
 FROM python:3
 
-MAINTAINER Perilla Roc <perillaroc@gmail.com>
+LABEL maintainer="perillaroc@gmail.com"
 
 VOLUME ["/etc/nwpc-hpc-exporter"]
 
