@@ -1,5 +1,6 @@
 import time
 import datetime
+import socket
 
 import click
 import yaml
@@ -39,6 +40,12 @@ def process_request(tasks):
                         file_system=a_file_system['file_system']
                     ).set(block_limits[an_item])
         except paramiko.ssh_exception.SSHException as ssh_exception:
+            print(datetime.datetime.now(), "reconnect ssh")
+            a_task['client'] = get_ssh_client(auth)
+        except socket.gaierror as socket_exception:
+            print(datetime.datetime.now(), "get socket gaierror exception.")
+            print(datetime.datetime.now(), "wait 5 seconds...")
+            time.sleep(5)
             print(datetime.datetime.now(), "reconnect ssh")
             a_task['client'] = get_ssh_client(auth)
 

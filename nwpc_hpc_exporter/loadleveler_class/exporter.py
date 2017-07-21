@@ -1,6 +1,7 @@
 # coding=utf-8
 import time
 import datetime
+import socket
 
 import click
 import yaml
@@ -78,6 +79,12 @@ def main(config_file):
         try:
             process_request(task)
         except paramiko.ssh_exception.SSHException as ssh_exception:
+            print(datetime.datetime.now(), "reconnect ssh")
+            task['client'] = get_ssh_client(config['global']['auth'])
+        except socket.gaierror as socket_exception:
+            print(datetime.datetime.now(), "get socket gaierror exception.")
+            print(datetime.datetime.now(), "wait 5 seconds...")
+            time.sleep(5)
             print(datetime.datetime.now(), "reconnect ssh")
             task['client'] = get_ssh_client(config['global']['auth'])
 
