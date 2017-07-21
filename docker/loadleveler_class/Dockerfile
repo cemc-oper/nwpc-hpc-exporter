@@ -6,6 +6,4 @@ ENV NWPC_LOADLEVELER_CLASS_EXPORTER_CONFIG "/etc/nwpc-hpc-exporter/loadleveler_c
 
 EXPOSE 8103
 
-ENTRYPOINT [ "/usr/local/bin/loadleveler_class_exporter" ]
-
-CMD ["--config-file=${NWPC_LOADLEVELER_CLASS_EXPORTER_CONFIG}"]
+ENTRYPOINT exec /usr/local/bin/loadleveler_class_exporter --config-file=${NWPC_LOADLEVELER_CLASS_EXPORTER_CONFIG}

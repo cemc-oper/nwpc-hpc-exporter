@@ -6,6 +6,4 @@ ENV NWPC_DISK_SPACE_EXPORTER_CONFIG "/etc/nwpc-hpc-exporter/disk_space.config.ym
 
 EXPOSE 8101
 
-ENTRYPOINT [ "/usr/local/bin/disk_space_exporter" ]
-
-CMD ["--config-file=${NWPC_DISK_SPACE_EXPORTER_CONFIG}"]
+ENTRYPOINT exec /usr/local/bin/disk_space_exporter --config-file=${NWPC_DISK_SPACE_EXPORTER_CONFIG}
