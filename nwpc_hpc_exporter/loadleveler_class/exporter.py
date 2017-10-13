@@ -35,6 +35,9 @@ def find_prop_by_id(item, prop_id):
 def process_request(task):
     t = 5
     result = get_result(task['client'], task['category_list'])
+    if result is None:
+        time.sleep(t)
+        return
     for a_class in result['items']:
         class_prop_item = find_prop_by_id(a_class, task['identify_category_id'])
 

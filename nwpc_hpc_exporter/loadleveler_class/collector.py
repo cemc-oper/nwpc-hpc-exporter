@@ -30,7 +30,7 @@ def get_ssh_client(auth):
     return client
 
 
-def run_command(client) -> (str,str):
+def run_command(client) -> (str, str):
     command = "/usr/bin/llclass -l"
 
     stdin, stdout, stderr = client.exec_command(command)
@@ -40,12 +40,14 @@ def run_command(client) -> (str,str):
     return std_out_string, std_error_out_string
 
 
-def get_result(client, category_list) -> dict:
+def get_result(client, category_list) -> dict or None:
     std_out_string, std_error_out_string = run_command(client)
     result_lines = std_out_string.split("\n")
 
     category_list = build_category_list(category_list)
 
     model = QueryModel.build_from_category_list(result_lines, category_list)
+    if model is None:
+        return None
     model_dict = model.to_dict()
     return model_dict
