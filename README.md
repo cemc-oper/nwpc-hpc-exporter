@@ -6,7 +6,8 @@ A Prometheus exporter for HPC metrics using in NWPC.
 
 - disk space
 - disk usage
-- loadleveler class
+- LoadLeveler class
+- Slurm partition
 
 ## Installation
 
@@ -62,4 +63,6 @@ docker run -d -p 8101:8101 -v ./dist/conf:/etc/nwpc-hpc-exporter \
 
 ## LICENSE
 
-GPL v3.0
+Copyright &copy; 2017-2018, Perilla Roc.
+
+`nwpc-hpc-exporter` is licensed under [GPL v3.0](LICENSE.md)

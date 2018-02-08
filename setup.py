@@ -52,7 +52,8 @@ setup(
         'console_scripts': [
             'disk_space_exporter=nwpc_hpc_exporter.disk_space.exporter:main',
             'disk_usage_exporter=nwpc_hpc_exporter.disk_usage.exporter:main',
-            'loadleveler_class_exporter=nwpc_hpc_exporter.loadleveler_class.exporter:main'
+            'loadleveler_class_exporter=nwpc_hpc_exporter.loadleveler_class.exporter:main',
+            'slurm_partition_exporter=nwpc_hpc_exporter.slurm_partition.exporter:main'
         ]
     }
 )
