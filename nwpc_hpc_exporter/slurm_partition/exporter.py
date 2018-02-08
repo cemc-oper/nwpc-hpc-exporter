@@ -97,7 +97,7 @@ def process_request(task):
             prop_item = find_prop_by_id(a_partition, an_item['prop_id'])
             value = an_item['value_extractor'](prop_item)
 
-            task['gauge_map'][an_item].labels(
+            task['gauge_map'][an_item['metrics_name']].labels(
                 partition_name=partition_prop_item['value']
             ).set(value)
 
@@ -113,7 +113,7 @@ def main(config_file):
 
     category_list = config['category_list']
     gauge_map = {
-        an_item: Gauge(
+        an_item['metrics_name']: Gauge(
             'hpc_slurm_sinfo_' + an_item['metrics_name'], an_item['metrics_name'], ['partition_name']
         ) for an_item in items
     }

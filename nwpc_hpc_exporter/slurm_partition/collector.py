@@ -3,7 +3,7 @@ import json
 from paramiko import SSHClient, AutoAddPolicy
 
 from nwpc_hpc_model.workload import QueryCategory, record_parser, value_saver
-from nwpc_hpc_model.slurm import SlurmQueryCategoryList, SlurmQueryModel
+from nwpc_hpc_model.workload.slurm import SlurmQueryCategoryList, SlurmQueryModel
 
 
 def build_category_list(category_list_config):
