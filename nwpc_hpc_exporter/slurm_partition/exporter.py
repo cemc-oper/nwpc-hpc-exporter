@@ -18,7 +18,7 @@ def get_token_from_index(index, text, sep='/'):
 
 def create_index_value_extractor(index):
     def value_extractor(prop):
-        text = prop['text']
+        text = prop.map['text']
         value = get_token_from_index(index, text)
         return value
     return value_extractor
@@ -77,8 +77,8 @@ def load_config(config_file):
 
 def find_prop_by_id(item, prop_id):
     prop_item = None
-    for a_prop in item['props']:
-        if a_prop['id'] == prop_id:
+    for a_prop in item.props:
+        if a_prop.category.id == prop_id:
             prop_item = a_prop
             break
     return prop_item
@@ -90,7 +90,7 @@ def process_request(task):
     if result is None:
         time.sleep(t)
         return
-    for a_partition in result['items']:
+    for a_partition in result.items:
         partition_prop_item = find_prop_by_id(a_partition, task['identify_category_id'])
 
         for an_item in task['metrics_items']:
@@ -98,7 +98,7 @@ def process_request(task):
             value = an_item['value_extractor'](prop_item)
 
             task['gauge_map'][an_item['metrics_name']].labels(
-                partition_name=partition_prop_item['value']
+                partition_name=partition_prop_item.map['value']
             ).set(value)
 
     time.sleep(t)
