@@ -36,9 +36,9 @@ def test_get_result(monkeypatch):
 
     result = collector.get_result(client, category_list)
 
-    assert(len(result['items']) == 4)
+    assert(len(result.items) == 4)
 
-    serial_item = result['items'][0]
+    serial_item = result.items[0]
     prop = find_prop_by_id(serial_item, "sinfo.partition")
     assert(prop['text'] == 'serial')
     prop = find_prop_by_id(serial_item, "sinfo.avail")
@@ -48,7 +48,7 @@ def test_get_result(monkeypatch):
     prop = find_prop_by_id(serial_item, "sinfo.cpus")
     assert(prop['text'] == '0/0/640/640')
 
-    normal_item = result['items'][1]
+    normal_item = result.items[1]
 
     prop = find_prop_by_id(normal_item, "sinfo.partition")
     assert(prop['text'] == 'normal')

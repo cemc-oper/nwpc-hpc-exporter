@@ -45,8 +45,4 @@ category_list:
     value_saver_class: StringSaver
     value_saver_arguments: []
 
-metrics_item:
-  - "sinfo.nodes"
-  - "sinfo.cpus"
-
 identify_category_id: "sinfo.partition"

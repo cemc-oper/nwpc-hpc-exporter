@@ -39,7 +39,7 @@ def run_command(client) -> (str, str):
     return std_out_string, std_error_out_string
 
 
-def get_result(client, category_list) -> dict or None:
+def get_result(client, category_list) -> SlurmQueryModel or None:
     std_out_string, std_error_out_string = run_command(client)
     result_lines = std_out_string.split("\n")
 
@@ -48,5 +48,4 @@ def get_result(client, category_list) -> dict or None:
     model = SlurmQueryModel.build_from_table_category_list(result_lines, category_list)
     if model is None:
         return None
-    model_dict = model.to_dict()
-    return model_dict
+    return model
