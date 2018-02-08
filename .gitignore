@@ -53,3 +53,4 @@ celerybeat-schedule
 celerybeat.pid
 
 .cache
+.pytest_cache/

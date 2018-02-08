@@ -10,7 +10,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 setup(
     name='nwpc-hpc-exporter',
 
-    version='0.1.0',
+    version='0.1.1',
 
     description='An HPC exporter for NWPC',
     long_description=long_description,
@@ -42,9 +42,9 @@ setup(
         'prometheus-client'
     ],
 
-    # extras_require={
-    #     'test': ['pytest'],
-    # },
+    extras_require={
+        'test': ['pytest'],
+    },
 
     dependency_links=[path.join(here, 'vendor/nwpc-hpc-model')],
 
