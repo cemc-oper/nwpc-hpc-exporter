@@ -120,6 +120,67 @@ class TestRecordParser(unittest.TestCase):
         for a_test_case in test_case_list:
             check_method(a_test_case)
 
+    def check_llq_file_path_record_parser(self, test_case):
+        lines = test_case["lines"]
+        value = test_case["value"]
+        name = test_case["name"]
+        label = test_case["label"]
+
+        parser = record_parser.LlqFilePathParser(label)
+        parser_value = parser.parse(lines)
+        self.assertEqual(parser_value, value)
+        print("Test passed:", name)
+
+    def test_llq_file_path_record_parser(self):
+        check_method = self.check_llq_file_path_record_parser
+        serial_job_running_file_path = os.path.join(
+            os.path.dirname(__file__),
+            "../data/detail_query/llq/serial_job_running.txt"
+        )
+        test_case_list = []
+        with open(serial_job_running_file_path) as serial_job_running_file:
+            lines = serial_job_running_file.readlines()
+            test_case_list.extend([
+                {
+                    "name": "llq.serial_job.running.out",
+                    "lines": lines,
+                    "value": "/cma/g1/nwp/SMSOUT/gmf_grapes_gfs_v2_0/grapes_global/12/post/postp_240.1",
+                    "label": "Out",
+                },
+                {
+                    "name": "llq.serial_job.running.err",
+                    "lines": lines,
+                    "value": "/cma/g1/nwp/SMSOUT/gmf_grapes_gfs_v2_0/grapes_global/12/post/postp_240.1.err",
+                    "label": "Err",
+                }
+            ])
+
+        parallel_job_running_file_path = os.path.join(
+            os.path.dirname(__file__),
+            "../data/detail_query/llq/parallel_job_running_3.txt"
+        )
+        with open(parallel_job_running_file_path) as parallel_job_running_file:
+            lines = parallel_job_running_file.readlines()
+            test_case_list.extend([
+                {
+                    "name": "llq.parallel_job.running.out",
+                    "lines": lines,
+                    "value": "/cmb/g3/chenjing/WRF-REPS/operation/gefs_ruc/2017052112/p02/tmpdir_wrf/"
+                             "printout/wrf_6173907.out",
+                    "label": "Out",
+                },
+                {
+                    "name": "llq.parallel_job.running.err",
+                    "lines": lines,
+                    "value": "/cmb/g3/chenjing/WRF-REPS/operation/gefs_ruc/2017052112/p02/tmpdir_wrf/"
+                             "printout/wrf_6173907.err",
+                    "label": "Err",
+                }
+            ])
+
+        for a_test_case in test_case_list:
+            check_method(a_test_case)
+
     def check_table_record_parser(self, test_case):
         line = test_case["line"]
         value = test_case["value"]

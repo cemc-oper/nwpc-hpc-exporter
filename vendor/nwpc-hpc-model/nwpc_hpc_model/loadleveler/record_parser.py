@@ -1,12 +1,6 @@
 # coding=utf-8
-
-
-class RecordParser(object):
-    def __init__(self):
-        pass
-
-    def parse(self, record):
-        pass
+import pathlib
+from nwpc_hpc_model.workload.record_parser import RecordParser, TableRecordParser
 
 
 class DetailLabelParser(RecordParser):
@@ -31,6 +25,27 @@ class DetailLabelParser(RecordParser):
         return ""
 
 
+class LlqFilePathParser(DetailLabelParser):
+    def __init__(self, label):
+        DetailLabelParser.__init__(self, label)
+
+    @staticmethod
+    def find_initial_working_dir(record):
+        parser = DetailLabelParser("Initial Working Dir")
+        value = parser.parse(record)
+        return value
+
+    def parse(self, record):
+        parser = DetailLabelParser(self.label)
+        value = parser.parse(record)
+
+        if value.startswith('.'):
+            initial_working_dir = LlqFilePathParser.find_initial_working_dir(record)
+            value = str(pathlib.PurePosixPath(initial_working_dir, value))
+
+        return value
+
+
 class LlqJobScriptParser(RecordParser):
     def __init__(self):
         RecordParser.__init__(self)
@@ -51,23 +66,6 @@ class LlqJobScriptParser(RecordParser):
         else:
             return ""
 
-        for line in record:
-            index = line.find(': ')
-            if index == -1:
-                continue
-            label = line[0:index].strip()
-            if label != script_label:
-                continue
-            value = line[index+2:].strip()
-            return value
-        return ""
-
-
-class TableRecordParser(RecordParser):
-    def __init__(self, begin_pos, end_pos):
-        RecordParser.__init__(self)
-        self.begin_pos = int(begin_pos)
-        self.end_pos = int(end_pos)
-
-    def parse(self, record):
-        return record[self.begin_pos:self.end_pos].strip()
+        file_path_parser = LlqFilePathParser(script_label)
+        value = file_path_parser.parse(record)
+        return value

@@ -8,10 +8,25 @@ class FilterCondition(object):
 
 
 def get_property_data(job_item, property_id):
+    """
+    get property data from a job item
+    :param job_item: QueryItem or a QueryItem dict.
+    :param property_id: property_id
+    :return: property data
+    """
     result = None
-    for a_prop in job_item['props']:
-        if a_prop['id'] == property_id:
-            result = a_prop['data']
+    if isinstance(job_item, dict):
+        props = job_item['props']
+        for a_prop in props:
+            if a_prop['id'] == property_id:
+                result = a_prop['data']
+                return result
+    else:
+        props = job_item.props
+        for a_prop in props:
+            if a_prop.map['id'] == property_id:
+                result = a_prop.map['data']
+                return result
     return result
 
 
@@ -63,6 +78,15 @@ def create_less_value_checker(expect_value):
 def create_in_value_checker(expect_values):
     def value_checker(value):
         if value in expect_values:
+            return True
+        else:
+            return False
+    return value_checker
+
+
+def create_value_in_checker(expect_value):
+    def value_checker(value):
+        if expect_value in value:
             return True
         else:
             return False
