@@ -6,7 +6,7 @@ python:
 
 install:
   - pip install pytest
-  - pip install -e .
+  - pip install -e --process-dependency-links .
 
 script:
   - pytest
