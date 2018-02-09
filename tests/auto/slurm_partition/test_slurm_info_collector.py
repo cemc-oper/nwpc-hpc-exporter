@@ -13,8 +13,8 @@ def load_config(config_file_path):
 
 def find_prop_by_id(item, prop_id):
     prop_item = None
-    for a_prop in item['props']:
-        if a_prop['id'] == prop_id:
+    for a_prop in item.props:
+        if a_prop.category.id == prop_id:
             prop_item = a_prop
             break
     return prop_item
@@ -40,22 +40,22 @@ def test_get_result(monkeypatch):
 
     serial_item = result.items[0]
     prop = find_prop_by_id(serial_item, "sinfo.partition")
-    assert(prop['text'] == 'serial')
+    assert(prop.map['text'] == 'serial')
     prop = find_prop_by_id(serial_item, "sinfo.avail")
-    assert(prop['text'] == 'up')
+    assert(prop.map['text'] == 'up')
     prop = find_prop_by_id(serial_item, "sinfo.nodes")
-    assert(prop['text'] == '0/0/20/20')
+    assert(prop.map['text'] == '0/0/20/20')
     prop = find_prop_by_id(serial_item, "sinfo.cpus")
-    assert(prop['text'] == '0/0/640/640')
+    assert(prop.map['text'] == '0/0/640/640')
 
     normal_item = result.items[1]
 
     prop = find_prop_by_id(normal_item, "sinfo.partition")
-    assert(prop['text'] == 'normal')
+    assert(prop.map['text'] == 'normal')
     prop = find_prop_by_id(normal_item, "sinfo.avail")
-    assert(prop['text'] == 'up')
+    assert(prop.map['text'] == 'up')
     prop = find_prop_by_id(normal_item, "sinfo.nodes")
-    assert(prop['text'] == '224/1139/141/1504')
+    assert(prop.map['text'] == '224/1139/141/1504')
     prop = find_prop_by_id(normal_item, "sinfo.cpus")
-    assert(prop['text'] == '6784/36832/4512/48128')
+    assert(prop.map['text'] == '6784/36832/4512/48128')
 

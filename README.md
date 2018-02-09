@@ -1,5 +1,7 @@
 # nwpc-hpc-exporter
 
+[![Build Status](https://travis-ci.org/perillaroc/nwpc-hpc-exporter.svg?branch=master)](https://travis-ci.org/perillaroc/nwpc-hpc-exporter)
+
 A Prometheus exporter for HPC metrics using in NWPC.
 
 ## Features
