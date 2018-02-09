@@ -6,7 +6,8 @@ python:
 
 install:
   - pip install pytest
-  - pip install -e --process-dependency-links .
+  - pip install -e .
+  - pip install -e vendor/nwpc-hpc-model
 
 script:
   - pytest
