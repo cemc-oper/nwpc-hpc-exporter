@@ -46,8 +46,6 @@ setup(
         'test': ['pytest'],
     },
 
-    dependency_links=[path.join(here, 'vendor/nwpc-hpc-model')],
-
     entry_points={
         'console_scripts': [
             'disk_space_exporter=nwpc_hpc_exporter.disk_space.exporter:main',
