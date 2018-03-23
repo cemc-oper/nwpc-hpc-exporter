@@ -1,6 +1,5 @@
 import re
 import locale
-import json
 from paramiko import SSHClient, AutoAddPolicy
 
 
@@ -12,7 +11,7 @@ def get_ssh_client(auth):
 
 
 def run_df_command(client) -> (str,str):
-    command = '/usr/bin/df -g'
+    command = '/usr/bin/df -m'
 
     stdin, stdout, stderr = client.exec_command(command)
     std_out_string = stdout.read().decode('UTF-8')
@@ -35,9 +34,9 @@ def get_disk_space(client) -> dict:
         if detail_re_result:
             file_system = detail_re_result.group(1)
 
-            gb_blocks = detail_re_result.group(2)
-            if gb_blocks.isdigit():
-                gb_blocks = locale.atoi(gb_blocks)
+            mb_blocks = detail_re_result.group(2)
+            if mb_blocks.isdigit():
+                mb_blocks = locale.atoi(mb_blocks)
 
             free_disk_space = detail_re_result.group(3)
             if free_disk_space.isdigit():
@@ -59,7 +58,7 @@ def get_disk_space(client) -> dict:
 
             current_file_system = {
                 'file_system': file_system,
-                'gb_blocks': gb_blocks,
+                'gb_blocks': mb_blocks / 1000.0,
                 'free_space': free_disk_space,
                 'space_used_percent': space_used_percent,
                 'inode_used': inode_used,
