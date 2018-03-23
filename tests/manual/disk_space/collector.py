@@ -1,20 +1,17 @@
 import json
-import os
 import yaml
 
-from nwpc_hpc_exporter.disk_space.collector import get_disk_space
-
-
-def get_dist_directory():
-    current_path = os.path.dirname(__file__)
-    return os.path.join(current_path, "../../../dist")
+from nwpc_hpc_exporter.disk_space.collector.linux import get_disk_space
+from nwpc_hpc_exporter.disk_space.collector import get_ssh_client
 
 
 def main():
-    with open(os.path.join(get_dist_directory(), "conf/test.config.yml"), 'r') as config_file:
+    with open("./dist/conf/pi/test_disk_space.config.yml", 'r') as config_file:
         config = yaml.load(config_file)
-    auth = config['auth']
-    disk_space_result = get_disk_space(auth)
+    auth = config['global']['auth']
+    print('getting ssh client...')
+    client = get_ssh_client(auth)
+    disk_space_result = get_disk_space(client)
     print(json.dumps(disk_space_result, indent=2))
 
 

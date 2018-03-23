@@ -1,23 +1,20 @@
 import re
 import locale
-from paramiko import SSHClient, AutoAddPolicy
+from nwpc_hpc_exporter.disk_space.collector import get_ssh_client, run_command
 
 
-def get_ssh_client(auth):
-    client = SSHClient()
-    client.set_missing_host_key_policy(AutoAddPolicy())
-    client.connect(auth['host'], auth['port'], auth['user'], auth['password'])
-    return client
+item_list = [
+    'gb_blocks',
+    'free_space',
+    'space_used_percent',
+    'inode_used',
+    'inode_used_percent'
+]
 
 
 def run_df_command(client) -> (str,str):
-    command = '/usr/bin/df -m'
-
-    stdin, stdout, stderr = client.exec_command(command)
-    std_out_string = stdout.read().decode('UTF-8')
-    std_error_out_string = stderr.read().decode('UTF-8')
-
-    return std_out_string, std_error_out_string
+    command = '/usr/bin/df -g'
+    return run_command(client, command)
 
 
 def get_disk_space(client) -> dict:
@@ -34,9 +31,9 @@ def get_disk_space(client) -> dict:
         if detail_re_result:
             file_system = detail_re_result.group(1)
 
-            mb_blocks = detail_re_result.group(2)
-            if mb_blocks.isdigit():
-                mb_blocks = locale.atoi(mb_blocks)
+            gb_blocks = detail_re_result.group(2)
+            if gb_blocks.isdigit():
+                gb_blocks = locale.atoi(gb_blocks)
 
             free_disk_space = detail_re_result.group(3)
             if free_disk_space.isdigit():
@@ -58,7 +55,7 @@ def get_disk_space(client) -> dict:
 
             current_file_system = {
                 'file_system': file_system,
-                'gb_blocks': mb_blocks / 1000.0,
+                'gb_blocks': gb_blocks,
                 'free_space': free_disk_space,
                 'space_used_percent': space_used_percent,
                 'inode_used': inode_used,
