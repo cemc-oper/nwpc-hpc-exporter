@@ -6,3 +6,22 @@ global:
     port: port number
     user: user name
     password: password
+
+collector:
+  type: aix # or linux
+
+exporter:
+  item_list:
+    - gb_blocks
+    - free_space
+    - space_used_percent
+    - inode_used
+    - inode_used_percent
+
+    # or as follows for linux
+    # - mb_blocks
+    # - used_space
+    #- available_space
+    # - space_used_percent
+
+  file_system_key: file_system # or 'mounted_on' for linux
