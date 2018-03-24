@@ -2,7 +2,7 @@ import json
 import yaml
 
 from nwpc_hpc_exporter.disk_space.collector.linux import get_disk_space
-from nwpc_hpc_exporter.disk_space.collector import get_ssh_client
+from nwpc_hpc_exporter.disk_space.exporter import get_ssh_client
 
 
 def main():

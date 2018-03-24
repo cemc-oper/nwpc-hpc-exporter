@@ -1,14 +1,6 @@
 import re
 import locale
-from nwpc_hpc_exporter.disk_space.collector import get_ssh_client, run_command
-
-
-item_list = [
-    'gb_blocks',
-    'used_space',
-    'available_space',
-    'space_used_percent',
-]
+from nwpc_hpc_exporter.disk_space.collector import run_command
 
 
 def run_df_command(client) -> (str,str):
@@ -38,19 +30,19 @@ def get_disk_space(client) -> dict:
             if used_space.isdigit():
                 used_space = locale.atoi(used_space)
 
-            space_used_percent = detail_re_result.group(4)
-            if space_used_percent[-1] == '%':
-                space_used_percent = space_used_percent[:-1]
-
-            available_space = detail_re_result.group(5)
+            available_space = detail_re_result.group(4)
             if available_space.isdigit():
                 available_space = locale.atoi(available_space)
+
+            space_used_percent = detail_re_result.group(5)
+            if space_used_percent[-1] == '%':
+                space_used_percent = space_used_percent[:-1]
 
             mounted_on = detail_re_result.group(6)
 
             current_file_system = {
                 'file_system': file_system,
-                'gb_blocks': mb_blocks / 1000.0,
+                'mb_blocks': mb_blocks,
                 'used_space': used_space,
                 'available_space': available_space,
                 'space_used_percent': space_used_percent,

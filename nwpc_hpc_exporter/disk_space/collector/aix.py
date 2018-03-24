@@ -1,18 +1,9 @@
 import re
 import locale
-from nwpc_hpc_exporter.disk_space.collector import get_ssh_client, run_command
+from nwpc_hpc_exporter.disk_space.collector import run_command
 
 
-item_list = [
-    'gb_blocks',
-    'free_space',
-    'space_used_percent',
-    'inode_used',
-    'inode_used_percent'
-]
-
-
-def run_df_command(client) -> (str,str):
+def run_df_command(client) -> (str, str):
     command = '/usr/bin/df -g'
     return run_command(client, command)
 
