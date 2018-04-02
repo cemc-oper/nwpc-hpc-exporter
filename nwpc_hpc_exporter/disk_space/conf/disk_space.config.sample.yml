@@ -21,7 +21,7 @@ exporter:
     # or as follows for linux
     # - mb_blocks
     # - used_space
-    #- available_space
+    # - available_space
     # - space_used_percent
 
   file_system_key: file_system # or 'mounted_on' for linux

@@ -1,10 +1,10 @@
 # coding=utf-8
-import json
-from paramiko import SSHClient, AutoAddPolicy
+from paramiko import SSHClient
 
-from nwpc_hpc_model.loadleveler import QueryCategory, QueryCategoryList, QueryModel, QueryProperty, QueryItem
+from nwpc_hpc_model.loadleveler import QueryCategory, QueryCategoryList, LoadLevelerQueryModel
 from nwpc_hpc_model.loadleveler import record_parser
 from nwpc_hpc_model.loadleveler import value_saver
+from nwpc_hpc_exporter.base.run import run_command
 
 
 def build_category_list(category_list_config):
@@ -23,30 +23,18 @@ def build_category_list(category_list_config):
     return category_list
 
 
-def get_ssh_client(auth):
-    client = SSHClient()
-    client.set_missing_host_key_policy(AutoAddPolicy())
-    client.connect(auth['host'], auth['port'], auth['user'], auth['password'])
-    return client
-
-
-def run_command(client) -> (str, str):
+def run_llclass_command(client: SSHClient) -> (str, str):
     command = "/usr/bin/llclass -l"
-
-    stdin, stdout, stderr = client.exec_command(command)
-    std_out_string = stdout.read().decode('UTF-8')
-    std_error_out_string = stderr.read().decode('UTF-8')
-
-    return std_out_string, std_error_out_string
+    return run_command(client, command)
 
 
-def get_result(client, category_list) -> dict or None:
-    std_out_string, std_error_out_string = run_command(client)
+def get_result(client: SSHClient, category_list) -> dict or None:
+    std_out_string, std_error_out_string = run_llclass_command(client)
     result_lines = std_out_string.split("\n")
 
     category_list = build_category_list(category_list)
 
-    model = QueryModel.build_from_category_list(result_lines, category_list)
+    model = LoadLevelerQueryModel.build_from_category_list(result_lines, category_list)
     if model is None:
         return None
     model_dict = model.to_dict()

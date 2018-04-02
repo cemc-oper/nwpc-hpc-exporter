@@ -1,6 +1,6 @@
 import re
 import locale
-from nwpc_hpc_exporter.disk_space.collector import run_command
+from nwpc_hpc_exporter.base.run import run_command
 
 
 def run_df_command(client) -> (str, str):

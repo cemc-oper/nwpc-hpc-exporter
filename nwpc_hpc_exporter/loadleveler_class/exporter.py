@@ -8,12 +8,8 @@ import yaml
 from prometheus_client import start_http_server, Gauge
 import paramiko
 
-from nwpc_hpc_exporter.loadleveler_class.collector import get_result, get_ssh_client
-
-item = [
-    'free_slots',
-    'maximum_slots'
-]
+from nwpc_hpc_exporter.base.connection import get_ssh_client
+from nwpc_hpc_exporter.loadleveler_class.collector import get_result
 
 
 def load_config(config_file):

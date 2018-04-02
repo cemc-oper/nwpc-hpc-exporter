@@ -1,24 +1,14 @@
+# coding=utf-8
 import re
 import locale
-import json
-from paramiko import SSHClient, AutoAddPolicy
+
+from paramiko import SSHClient
+from nwpc_hpc_exporter.base.run import run_command
 
 
-def get_ssh_client(auth):
-    client = SSHClient()
-    client.set_missing_host_key_policy(AutoAddPolicy())
-    client.connect(auth['host'], auth['port'], auth['user'], auth['password'])
-    return client
-
-
-def run_cmquota_command(client) -> (str,str):
+def run_cmquota_command(client: SSHClient) -> (str, str):
     command = "/cma/u/app/sys_bin/cmquota ${USER}"
-
-    stdin, stdout, stderr = client.exec_command(command)
-    std_out_string = stdout.read().decode('UTF-8')
-    std_error_out_string = stderr.read().decode('UTF-8')
-
-    return std_out_string, std_error_out_string
+    return run_command(client, command)
 
 
 def get_disk_usage(auth, client) -> dict:

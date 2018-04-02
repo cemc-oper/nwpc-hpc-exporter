@@ -9,16 +9,8 @@ import click
 import yaml
 import paramiko
 from prometheus_client import start_http_server, Gauge
-from paramiko import SSHClient, AutoAddPolicy
 
-from nwpc_hpc_exporter.disk_space import collector
-
-
-def get_ssh_client(auth: dict) -> SSHClient:
-    client = SSHClient()
-    client.set_missing_host_key_policy(AutoAddPolicy())
-    client.connect(auth['host'], auth['port'], auth['user'], auth['password'])
-    return client
+from nwpc_hpc_exporter.base.connection import get_ssh_client
 
 
 def load_config(config_file):

@@ -8,7 +8,8 @@ import yaml
 from prometheus_client import start_http_server, Gauge
 import paramiko
 
-from nwpc_hpc_exporter.slurm_partition.collector import get_result, get_ssh_client
+from nwpc_hpc_exporter.base.connection import get_ssh_client
+from nwpc_hpc_exporter.slurm_partition.collector import get_result
 
 
 def get_token_from_index(index, text, sep='/'):

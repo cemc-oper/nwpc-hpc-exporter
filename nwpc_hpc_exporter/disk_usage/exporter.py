@@ -7,7 +7,9 @@ import yaml
 from prometheus_client import start_http_server, Gauge
 import paramiko
 
-from nwpc_hpc_exporter.disk_usage.collector import get_disk_usage, get_ssh_client
+from nwpc_hpc_exporter.base.connection import get_ssh_client
+from nwpc_hpc_exporter.disk_usage.collector import get_disk_usage
+
 
 item_map = {
     'block_limits': [
