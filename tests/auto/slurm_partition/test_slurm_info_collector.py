@@ -21,7 +21,7 @@ def find_prop_by_id(item, prop_id):
 
 
 def test_get_result(monkeypatch):
-    def mock_run_command(ssh_client):
+    def mock_run_command(command, ssh_client):
         result_file = Path(Path(__file__).parent, 'data/sinfo.query.txt')
         with open(result_file, 'r') as f:
             text = f.read()
@@ -58,4 +58,3 @@ def test_get_result(monkeypatch):
     assert(prop.map['text'] == '224/1139/141/1504')
     prop = find_prop_by_id(normal_item, "sinfo.cpus")
     assert(prop.map['text'] == '6784/36832/4512/48128')
-

@@ -5,8 +5,8 @@ python:
 
 install:
   - pip install pytest
-  - pip install -e .
   - pip install -e vendor/nwpc-hpc-model
+  - pip install -e .
 
 script:
   - pytest
