@@ -36,7 +36,7 @@ Get Docker image from Docker Hub. Run a container with port and volume mapped.
 ```bash
 docker pull perillaroc/nwpc-hpc-exporter:disk-space
 
-docker run -d -p 8101:8101 -v ./disk_space.config.yml:/etc/nwpc-hpc-exporter/disk_space.config.yml \
+docker run -d -p 8101:8101 -v /some_path/disk_space.config.yml:/etc/nwpc-hpc-exporter/disk_space.config.yml \
     perillaroc/nwpc-hpc-exporter:disk-space
 ```
 
@@ -59,7 +59,7 @@ docker build -t perillaroc/nwpc-disk-space-exporter .
 Finally, run a docker container with port and volume mapped.
 
 ```bash
-docker run -d -p 8101:8101 -v ./disk_usage.config.yml:/etc/nwpc-hpc-exporter/disk_usage.config.yml \
+docker run -d -p 8101:8101 -v /some_path/disk_usage.config.yml:/etc/nwpc-hpc-exporter/disk_usage.config.yml \
     perillaroc/nwpc-disk-usage-exporter
 ```
 
