@@ -32,9 +32,11 @@ def process_request(tasks):
     for a_task in tasks:
         auth = a_task['auth']
         client = a_task['client']
+        task_type = a_task['type']
+        category_list = a_task['category_list']
 
         try:
-            disk_space_result = get_disk_usage(auth, client)
+            disk_space_result = get_disk_usage(task_type, auth, category_list, client)
             for a_file_system in disk_space_result['file_systems']:
                 block_limits = a_file_system['block_limits']
                 for an_item in item_map['block_limits']:
@@ -71,9 +73,26 @@ def main(config_file):
             ) for an_item in item_map['block_limits']
         }
         client = get_ssh_client(a_task['auth'])
+
+        task_type = a_task['type']
+
+        if 'category_list_key' in a_task:
+            category_list_key = a_task['category_list_key']
+            keys = category_list_key.split('.')
+            v = config
+            for key in keys:
+                v = v[key]
+            category_list = v
+        elif 'category_list' in a_task:
+            category_list = a_task['category_list']
+        else:
+            raise Exception('Please set category_list or category_list_key.')
+
         tasks.append({
             'name': a_task['name'],
             'auth': a_task['auth'],
+            'type': task_type,
+            'category_list': category_list,
             'client': client,
             'block_limits_gauge_map': block_limits_gauge_map
         })

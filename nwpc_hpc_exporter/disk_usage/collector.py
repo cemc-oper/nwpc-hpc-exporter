@@ -4,88 +4,54 @@ import locale
 
 from paramiko import SSHClient
 from nwpc_hpc_exporter.base.run import run_command
+from nwpc_hpc_model.disk_usage.aix import AixDiskUsageCategoryList, AixDiskUsageQueryModel, QueryCategory, \
+    record_parser, value_saver
+from nwpc_hpc_model.base.query_item import get_property_data
 
 
-def run_cmquota_command(client: SSHClient) -> (str, str):
-    command = "/cma/u/app/sys_bin/cmquota ${USER}"
+disk_usage_command_map = {
+    'aix': '/cma/u/app/sys_bin/cmquota ${USER}',
+    'pi': 'quotainfo'
+}
+
+
+def run_disk_usage_command(task_type: str, client: SSHClient) -> (str, str):
+    command = disk_usage_command_map[task_type]
     return run_command(client, command)
 
 
-def get_disk_usage(auth, client) -> dict:
-    std_out_string, std_error_out_string = run_cmquota_command(client)
+def get_disk_usage(task_type: str, auth: dict, category_list: dict, client: SSHClient) -> dict:
+    std_out_string, std_error_out_string = run_disk_usage_command(task_type, client)
     result_lines = std_out_string.split("\n")
 
-    detail_pattern = r'^(\w+) +(\w+) +(\d+) +(\d+) +(\d+) +(\d+) +(.+) \| +(\d+) +(\d+) +(\d+) +(\d+) +(\w+) +(.+)'
-    detail_prog = re.compile(detail_pattern)
+    category_list = AixDiskUsageCategoryList.build_from_config(category_list)
+    model = AixDiskUsageQueryModel.build_from_category_list(result_lines, category_list)
+
     quota_result = dict()
     file_system_list = list()
 
-    for a_line in result_lines:
-        detail_re_result = detail_prog.match(a_line)
-        if detail_re_result:
-            file_system = detail_re_result.group(1)
-            quota_type = detail_re_result.group(2)
-
-            current_usage = detail_re_result.group(3)
-            if current_usage.isdigit():
-                current_usage = locale.atoi(current_usage)
-
-            block_quota = detail_re_result.group(4)
-            if block_quota.isdigit():
-                block_quota = locale.atoi(block_quota)
-
-            block_limit = detail_re_result.group(5)
-            if block_limit.isdigit():
-                block_limit = locale.atoi(block_limit)
-
-            block_in_doubt = detail_re_result.group(6)
-            if block_in_doubt.isdigit():
-                block_in_doubt = locale.atoi(block_in_doubt)
-
-            block_grace = detail_re_result.group(7).strip()
-
-            file_files = detail_re_result.group(8)
-            if file_files.isdigit():
-                file_files = locale.atoi(file_files)
-
-            file_quota = detail_re_result.group(9)
-            if file_quota.isdigit():
-                file_quota = locale.atoi(file_quota)
-
-            file_limit = detail_re_result.group(10)
-            if file_limit.isdigit():
-                file_limit = locale.atoi(file_limit)
-
-            file_in_doubt = detail_re_result.group(11)
-            if file_in_doubt.isdigit():
-                file_in_doubt = locale.atoi(file_in_doubt)
-
-            file_grace = detail_re_result.group(12).strip()
-            file_remarks = detail_re_result.group(13)
-
-            current_file_system = dict()
-            current_file_system['file_system'] = file_system
-            current_file_system['type'] = quota_type
-
-            block_limits = {
-                'current': current_usage,
-                'quota': block_quota,
-                'limit': block_limit,
-                'in_doubt': block_in_doubt,
-                'grace': block_grace
-            }
-            file_limits = {
-                'files': file_files,
-                'quota': file_quota,
-                'limit': file_limit,
-                'in_doubt': file_in_doubt,
-                'grace': file_grace,
-                'remarks': file_remarks
-            }
-            current_file_system['block_limits'] = block_limits
-            current_file_system['file_limits'] = file_limits
-
-            file_system_list.append(current_file_system)
+    for an_item in model.items:
+        current_file_system = dict()
+        current_file_system['file_system'] = get_property_data(an_item, "disk_usage.file_system")
+        current_file_system['type'] = get_property_data(an_item, "disk_usage.quota_type")
+        block_limits = {
+            'current': get_property_data(an_item, "disk_usage.block_limits.current"),
+            'quota': get_property_data(an_item, "disk_usage.block_limits.quota"),
+            'limit': get_property_data(an_item, "disk_usage.block_limits.limit"),
+            'in_doubt': get_property_data(an_item, "disk_usage.block_limits.in_doubt"),
+            'grace': get_property_data(an_item, "disk_usage.block_limits.grace")
+        }
+        file_limits = {
+            'files': get_property_data(an_item, "disk_usage.file_limits.files"),
+            'quota': get_property_data(an_item, "disk_usage.file_limits.quota"),
+            'limit': get_property_data(an_item, "disk_usage.file_limits.limit"),
+            'in_doubt': get_property_data(an_item, "disk_usage.file_limits.in_doubt"),
+            'grace': get_property_data(an_item, "disk_usage.file_limits.grace"),
+            'remarks': get_property_data(an_item, "disk_usage.file_limits.remarks")
+        }
+        current_file_system['block_limits'] = block_limits
+        current_file_system['file_limits'] = file_limits
+        file_system_list.append(current_file_system)
 
     quota_result['file_systems'] = file_system_list
     quota_result['user'] = auth['user']
