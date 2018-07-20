@@ -1,23 +1,11 @@
-import time
-import datetime
-import socket
+# coding: utf-8
+import importlib
 
 import click
 import yaml
-from prometheus_client import start_http_server, Gauge
-import paramiko
+from prometheus_client import start_http_server
 
 from nwpc_hpc_exporter.base.connection import get_ssh_client
-from nwpc_hpc_exporter.disk_usage.collector import get_disk_usage
-
-
-item_map = {
-    'block_limits': [
-        'current',
-        'quota',
-        'limit'
-    ]
-}
 
 
 def load_config(config_file):
@@ -27,33 +15,24 @@ def load_config(config_file):
     return config
 
 
-def process_request(tasks):
-    t = 5
-    for a_task in tasks:
-        auth = a_task['auth']
-        client = a_task['client']
-        task_type = a_task['type']
-        category_list = a_task['category_list']
+def get_collector(config):
+    collector_config = config['collector']
+    collector_type = collector_config['type']
 
-        try:
-            disk_space_result = get_disk_usage(task_type, auth, category_list, client)
-            for a_file_system in disk_space_result['file_systems']:
-                block_limits = a_file_system['block_limits']
-                for an_item in item_map['block_limits']:
-                    a_task['block_limits_gauge_map'][an_item].labels(
-                        file_system=a_file_system['file_system']
-                    ).set(block_limits[an_item])
-        except paramiko.ssh_exception.SSHException as ssh_exception:
-            print(datetime.datetime.now(), "reconnect ssh")
-            a_task['client'] = get_ssh_client(auth)
-        except socket.gaierror as socket_exception:
-            print(datetime.datetime.now(), "get socket gaierror exception.")
-            print(datetime.datetime.now(), "wait 5 seconds...")
-            time.sleep(5)
-            print(datetime.datetime.now(), "reconnect ssh")
-            a_task['client'] = get_ssh_client(auth)
+    collector_module = importlib.import_module("nwpc_hpc_exporter.disk_usage.collector." + collector_type)
+    collector_class = collector_module.Collector
 
-    time.sleep(t)
+    return collector_class
+
+
+def get_gauge_map_method(config):
+    collector_config = config['collector']
+    collector_type = collector_config['type']
+
+    collector_module = importlib.import_module("nwpc_hpc_exporter.disk_usage.collector." + collector_type)
+    gauge_map_method = collector_module.generate_task_gauge_map
+
+    return gauge_map_method
 
 
 @click.command()
@@ -63,43 +42,27 @@ def main(config_file):
 
     start_http_server(config['global']['exporter']['port'])
 
+    collector_class = get_collector(config)
+    collector = collector_class(config)
+
+    category_list = config['collector']['category_list']
     tasks_config = config['tasks']
     print('getting ssh client...')
     tasks = []
     for a_task in tasks_config:
-        block_limits_gauge_map = {
-            an_item: Gauge(
-                'hpc_' + a_task['name'] + '_disk_usage_block_limit_' + an_item, an_item, ['file_system']
-            ) for an_item in item_map['block_limits']
-        }
         client = get_ssh_client(a_task['auth'])
 
-        task_type = a_task['type']
-
-        if 'category_list_key' in a_task:
-            category_list_key = a_task['category_list_key']
-            keys = category_list_key.split('.')
-            v = config
-            for key in keys:
-                v = v[key]
-            category_list = v
-        elif 'category_list' in a_task:
-            category_list = a_task['category_list']
-        else:
-            raise Exception('Please set category_list or category_list_key.')
-
         tasks.append({
-            'name': a_task['name'],
+            'owner': a_task['owner'],
+            'repo': a_task['repo'],
             'auth': a_task['auth'],
-            'type': task_type,
             'category_list': category_list,
             'client': client,
-            'block_limits_gauge_map': block_limits_gauge_map
         })
 
     print('exporter is working...')
     while True:
-        process_request(tasks)
+        collector.process_request(tasks)
 
 
 if __name__ == '__main__':
