@@ -11,13 +11,13 @@ collector:
       - file_system
     gauge_list:
       -
-        name: aix_disk_usage_block_limits_current_kb
+        name: hpc_aix_disk_usage_block_limits_current_kb
         category_id: "disk_usage.block_limits.current"
       -
-        name: aix_disk_usage_block_limits_quota_kb
+        name: hpc_aix_disk_usage_block_limits_quota_kb
         category_id: "disk_usage.block_limits.quota"
       -
-        name: aix_disk_usage_block_limits_limit_kb
+        name: hpc_aix_disk_usage_block_limits_limit_kb
         category_id: "disk_usage.block_limits.limit"
 
   category_list:

@@ -43,7 +43,8 @@ def main(config_file):
     start_http_server(config['global']['exporter']['port'])
 
     collector_class = get_collector(config)
-    collector = collector_class(config)
+    collector = collector_class(config['collector'])
+    collector.setup()
 
     category_list = config['collector']['category_list']
     tasks_config = config['tasks']

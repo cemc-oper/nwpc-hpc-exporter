@@ -1,0 +1,56 @@
+global:
+  exporter:
+    port: port number
+
+collector:
+  type: pi
+  metric:
+    gauge_label:
+      - owner
+      - repo
+      - file_system
+    gauge_list:
+      -
+        name: hpc_pi_disk_usage_total_size
+        category_id: "disk_usage.total_size"
+      -
+        name: hpc_pi_disk_usage_used_size
+        category_id: "disk_usage.used_size"
+
+  category_list:
+  -
+    id: "disk_usage.dir"
+    display_name: Direcotry
+    label: dir
+    record_parser_class: TokenRecordParser
+    record_parser_arguments:
+      - 0
+    value_saver_class: StringSaver
+    value_saver_arguments: []
+  -
+    id: "disk_usage.total_size"
+    display_name: "Size"
+    label: Size(GB)
+    record_parser_class: TokenRecordParser
+    record_parser_arguments:
+      - 1
+    value_saver_class: NumberSaver
+    value_saver_arguments: []
+  -
+    id: "disk_usage.used_size"
+    display_name: "Used"
+    label: "Used(GB)"
+    record_parser_class: TokenRecordParser
+    record_parser_arguments:
+      - 2
+    value_saver_class: NumberSaver
+    value_saver_arguments: []
+
+
+tasks:
+  - name: task_name
+    auth:
+      host: host
+      port: port number
+      user: user name
+      password: user password
