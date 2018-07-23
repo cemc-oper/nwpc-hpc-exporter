@@ -1,0 +1,49 @@
+global:
+  exporter:
+    port: port number
+  auth:
+    host: some host
+    port: port number
+    user: user name
+    password: password
+
+collector:
+  type: aix # or linux
+  metric:
+    gauge_label:
+      - owner
+      - repo
+      - file_system
+    gauge_list:
+      -
+        name: hpc_aix_total_size_gb
+        category_id: "disk_space.blocks.total_size_gb"
+      -
+        name: hpc_aix_free_size_gb
+        category_id: "disk_space.blocks.free_size_gb"
+      -
+        name: hpc_aix_fspace_used_percent
+        category_id: "disk_space.blocks.used_percent"
+      -
+        name: hpc_aix_fspace_inode_used_
+        category_id: "disk_space.inode.used"
+      -
+        name: hpc_aix_fspace_inode_used_percent
+        category_id: "disk_space.inode.used_percent"
+
+
+exporter:
+  item_list:
+    - gb_blocks
+    - free_space
+    - space_used_percent
+    - inode_used
+    - inode_used_percent
+
+    # or as follows for linux
+    # - mb_blocks
+    # - used_space
+    # - available_space
+    # - space_used_percent
+
+  file_system_key: file_system # or 'mounted_on' for linux
