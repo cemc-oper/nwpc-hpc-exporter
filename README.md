@@ -14,12 +14,12 @@ A Prometheus exporter for HPC metrics using in NWPC.
 ## Installation
 
 ```bash
-python setup.py install
+pip install .
 ```
 
 ## Configure
 
-See configure sample files in `conf` directory.
+See configure sample files in `nwpc_hpc_exporter/xxx/conf` directory.
 
 ## Usage
 
