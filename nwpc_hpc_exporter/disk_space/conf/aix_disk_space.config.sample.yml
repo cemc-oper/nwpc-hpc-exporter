@@ -11,9 +11,19 @@ collector:
   type: aix # or linux
   metric:
     gauge_label:
-      - owner
-      - repo
-      - file_system
+      -
+        name: owner
+        type: task
+        config_key: owner
+      -
+        name: repo
+        type: task
+        config_key: repo
+      -
+        name: file_system
+        type: category
+        category_id: "disk_space.file_system"
+
     gauge_list:
       -
         name: hpc_aix_total_size_gb
@@ -22,28 +32,58 @@ collector:
         name: hpc_aix_free_size_gb
         category_id: "disk_space.blocks.free_size_gb"
       -
-        name: hpc_aix_fspace_used_percent
-        category_id: "disk_space.blocks.used_percent"
-      -
-        name: hpc_aix_fspace_inode_used_
+        name: hpc_aix_space_inode_used
         category_id: "disk_space.inode.used"
-      -
-        name: hpc_aix_fspace_inode_used_percent
-        category_id: "disk_space.inode.used_percent"
+
+  category_list:
+    -
+      id: "disk_space.file_system"
+      display_name: Filesystem
+      label: Filesystem
+      record_parser_class: RegexGroupParser
+      record_parser_arguments:
+        - 1
+      value_saver_class: StringSaver
+      value_saver_arguments: []
+    -
+      id: "disk_space.blocks.total_size_gb"
+      display_name: "Total size (GB)"
+      label: "GB blocks"
+      record_parser_class: RegexGroupParser
+      record_parser_arguments:
+        - 2
+      value_saver_class: NumberSaver
+      value_saver_arguments: []
+    -
+      id: "disk_space.blocks.free_size_gb"
+      display_name: "Free size (GB)"
+      label: "Free"
+      record_parser_class: RegexGroupParser
+      record_parser_arguments:
+        - 3
+      value_saver_class: NumberSaver
+      value_saver_arguments: []
+    -
+      id: "disk_space.inode.used"
+      display_name: "inode used"
+      label: "Iused"
+      record_parser_class: RegexGroupParser
+      record_parser_arguments:
+        - 5
+      value_saver_class: NumberSaver
+      value_saver_arguments: []
+    -
+      id: "disk_space.mounted_on"
+      display_name: "Mounted on"
+      label: "Mounted on"
+      record_parser_class: RegexGroupParser
+      record_parser_arguments:
+        - 7
+      value_saver_class: StringSaver
+      value_saver_arguments: []
 
 
-exporter:
-  item_list:
-    - gb_blocks
-    - free_space
-    - space_used_percent
-    - inode_used
-    - inode_used_percent
-
-    # or as follows for linux
-    # - mb_blocks
-    # - used_space
-    # - available_space
-    # - space_used_percent
-
-  file_system_key: file_system # or 'mounted_on' for linux
+tasks:
+  -
+    owner: nwp_xp
+    repo: aix
