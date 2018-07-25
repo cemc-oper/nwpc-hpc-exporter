@@ -3,7 +3,7 @@ import json
 import os
 import yaml
 
-from nwpc_hpc_exporter.loadleveler_class.collector import get_result
+from nwpc_hpc_exporter.workload.collector.loadleveler_class.request import get_result
 
 
 def get_dist_directory():

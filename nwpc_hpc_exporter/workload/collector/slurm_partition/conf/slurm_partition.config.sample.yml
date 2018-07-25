@@ -1,0 +1,133 @@
+global:
+  exporter:
+    port: port number
+  auth:
+    host: host
+    port: port
+    user: user
+    password: password
+    
+collector:
+  type: slurm_partition
+  metric:
+    gauge_label:
+      -
+        name: owner
+        type: task
+        config_key: owner
+      -
+        name: repo
+        type: task
+        config_key: repo
+      -
+        name: queue
+        type: category
+        category_id: sinfo.partition
+    gauge_list:
+      -
+        name: hpc_workload_slurm_partition_nodes_available
+        category_id: sinfo.nodes
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 0
+      -
+        name: hpc_worklaod_slurm_partition_nodes_idle
+        category_id: sinfo.nodes
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 1
+      -
+        name: hpc_worklaod_slurm_partition_nodes_other
+        category_id: sinfo.nodes
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 2
+      -
+        name: hpc_worklaod_slurm_partition_nodes_total
+        category_id: sinfo.nodes
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 3
+      -
+        name: hpc_worklaod_slurm_partition_cpus_available
+        category_id: sinfo.cpus
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 0
+      -
+        name: hpc_worklaod_slurm_partition_cpus_idle
+        category_id: sinfo.cpus
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 1
+      -
+        name: hpc_worklaod_slurm_partition_cpus_other
+        category_id: sinfo.cpus
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 2
+      -
+        name: hpc_worklaod_slurm_partition_cpus_total
+        category_id: sinfo.cpus
+        value_extractor:
+          class: TokenValueExtractor
+          arguments:
+            sep: '/'
+            index: 3
+
+  category_list:
+    -
+      id: "sinfo.partition"
+      display_name: Partition
+      label: PARTITION
+      record_parser_class: TokenRecordParser
+      record_parser_arguments:
+        - -1
+      value_saver_class: StringSaver
+      value_saver_arguments: []
+    -
+      id: "sinfo.avail"
+      display_name: "Avail"
+      label: AVAIL
+      record_parser_class: TokenRecordParser
+      record_parser_arguments:
+        - -1
+      value_saver_class: StringSaver
+      value_saver_arguments: []
+    -
+      id: "sinfo.nodes"
+      display_name: "Nodes(A/I/O/T)"
+      label: "NODES(A/I/O/T)"
+      record_parser_class: TokenRecordParser
+      record_parser_arguments:
+        - -1
+      value_saver_class: StringSaver
+      value_saver_arguments: []
+    -
+      id: "sinfo.cpus"
+      display_name: "CPUs(A/I/O/T)"
+      label: "CPUS(A/I/O/T)"
+      record_parser_class: TokenRecordParser
+      record_parser_arguments:
+        - -1
+      value_saver_class: StringSaver
+      value_saver_arguments: []
+
+tasks:
+  -
+    owner: owner
+    repo: repo

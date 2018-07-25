@@ -28,7 +28,7 @@ def run_sinfo_command(client: SSHClient) -> (str, str):
     return run_command(client, command)
 
 
-def get_result(client, category_list) -> SlurmQueryModel or None:
+def get_result(category_list, client) -> SlurmQueryModel or None:
     std_out_string, std_error_out_string = run_sinfo_command(client)
     result_lines = std_out_string.split("\n")
 

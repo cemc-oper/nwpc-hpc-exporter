@@ -19,7 +19,7 @@ def get_collector(config):
     collector_config = config['collector']
     collector_type = collector_config['type']
 
-    collector_module = importlib.import_module("nwpc_hpc_exporter.disk_space.collector." + collector_type)
+    collector_module = importlib.import_module("nwpc_hpc_exporter.workload.collector." + collector_type)
     collector_class = collector_module.Collector
 
     return collector_class
@@ -30,10 +30,7 @@ def get_collector(config):
 def main(config_file):
     config = load_config(config_file)
 
-    host = "0.0.0.0"
-    port = config['global']['exporter']['port']
-    print(f"starting http server on {host}:{port}...")
-    start_http_server(port, addr=host)
+    start_http_server(config['global']['exporter']['port'])
 
     auth = config['global']['auth']
 

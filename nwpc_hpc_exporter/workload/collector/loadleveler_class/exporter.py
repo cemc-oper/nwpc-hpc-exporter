@@ -9,7 +9,7 @@ from prometheus_client import start_http_server, Gauge
 import paramiko
 
 from nwpc_hpc_exporter.base.connection import get_ssh_client
-from nwpc_hpc_exporter.loadleveler_class.collector import get_result
+from nwpc_hpc_exporter.workload.collector.loadleveler_class.request import get_result
 
 
 def load_config(config_file):

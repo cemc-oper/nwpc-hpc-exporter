@@ -48,7 +48,8 @@ collector:
 
 
 tasks:
-  - name: task_name
+  - owner: owner name
+    repo: repo name
     auth:
       host: host
       port: port number

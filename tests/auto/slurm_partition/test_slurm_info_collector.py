@@ -1,7 +1,7 @@
 # coding: utf-8
 import yaml
 from pathlib import Path
-from nwpc_hpc_exporter.slurm_partition import collector
+from nwpc_hpc_exporter.workload.collector.slurm_partition import request
 
 
 def load_config(config_file_path):
@@ -27,14 +27,14 @@ def test_get_result(monkeypatch):
             text = f.read()
             return text, ''
 
-    monkeypatch.setattr(collector, "run_command", mock_run_command)
+    monkeypatch.setattr(request, "run_command", mock_run_command)
 
     client = object()
 
     config = load_config(Path(Path(__file__).parent, 'data/slurm_partition.config.yml'))
     category_list = config['category_list']
 
-    result = collector.get_result(client, category_list)
+    result = request.get_result(category_list, client)
 
     assert(len(result.items) == 4)
 
