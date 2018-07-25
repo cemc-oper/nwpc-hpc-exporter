@@ -45,15 +45,13 @@ docker run -d -p 8101:8101 -v /some_path/disk_space.config.yml:/etc/nwpc-hpc-exp
 First, build the base image nwpc-hpc-exporter.
 
 ```bash
-cd ./docker/nwpc_hpc_exporter
-docker build -t perillaroc/nwpc-hpc-exporter .
+docker build -t perillaroc/nwpc-hpc-exporter -f ./docker/nwpc_hpc_exporter/Dockerfile .
 ```
 
 Then, build other exporter images. Such as disk space exporter.
 
 ```bash
-cd ./docker/disk_space
-docker build -t perillaroc/nwpc-disk-space-exporter .
+docker build -t perillaroc/nwpc-disk-space-exporter -f ./docker/disk_space/Dockerfile .
 ```
 
 Finally, run a docker container with port and volume mapped.
