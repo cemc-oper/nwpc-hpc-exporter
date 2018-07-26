@@ -7,18 +7,60 @@ global:
     user: user
     password: password
 
-category_list:
+collector:
+  type: loadleveler_class
+  metric:
+    gauge_label:
+      -
+        name: owner
+        type: task
+        config_key: owner
+      -
+        name: repo
+        type: task
+        config_key: repo
+      -
+        name: queue
+        type: category
+        category_id: llclass.name
+    gauge_list:
+      -
+        name: hpc_workload_loadleveler_class_free_slots
+        category_id: llclass.free_slots
+      -
+        name: hpc_workload_loadleveler_class_maximum_slots
+        category_id: llclass.maximum_slots
+
+  category_list:
+    -
+      id: "llclass.name"
+      display_name: Name
+      label: Name
+      record_parser_class: DetailLabelParser
+      record_parser_arguments:
+        - Name
+      value_saver_class: StringSaver
+      value_saver_arguments: []
+    -
+      id: "llclass.free_slots"
+      display_name: "Free Slots"
+      label: Free_slots
+      record_parser_class: DetailLabelParser
+      record_parser_arguments:
+        - Free_slots
+      value_saver_class: NumberSaver
+      value_saver_arguments: []
+    -
+      id: "llclass.maximum_slots"
+      display_name: "Maximum Slots"
+      label: Maximum_slots
+      record_parser_class: DetailLabelParser
+      record_parser_arguments:
+        - Maximum_slots
+      value_saver_class: NumberSaver
+      value_saver_arguments: []
+
+tasks:
   -
-    id: id
-    display_name: display name
-    label: label
-    record_parser_class: parser class
-    record_parser_arguments: array, parser arguments
-    value_saver_class: value saver class
-    value_saver_arguments: array, saver arguments
-
-metrics_item:
-  - item_id_one
-  - item_id_two
-
-identify_category_id: item_id
+    owner: owner
+    repo: repo

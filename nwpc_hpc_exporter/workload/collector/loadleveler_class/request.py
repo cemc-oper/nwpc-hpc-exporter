@@ -1,9 +1,9 @@
 # coding=utf-8
 from paramiko import SSHClient
 
-from nwpc_hpc_model.loadleveler import QueryCategory, QueryCategoryList, LoadLevelerQueryModel
-from nwpc_hpc_model.loadleveler import record_parser
-from nwpc_hpc_model.loadleveler import value_saver
+from nwpc_hpc_model.workload.loadleveler import QueryCategory, QueryCategoryList, LoadLevelerQueryModel
+from nwpc_hpc_model.workload.loadleveler import record_parser
+from nwpc_hpc_model.workload.loadleveler import value_saver
 from nwpc_hpc_exporter.base.run import run_command
 
 
@@ -28,14 +28,11 @@ def run_llclass_command(client: SSHClient) -> (str, str):
     return run_command(client, command)
 
 
-def get_result(client: SSHClient, category_list) -> dict or None:
+def get_result(category_list, client: SSHClient) -> dict or None:
     std_out_string, std_error_out_string = run_llclass_command(client)
     result_lines = std_out_string.split("\n")
 
     category_list = build_category_list(category_list)
 
     model = LoadLevelerQueryModel.build_from_category_list(result_lines, category_list)
-    if model is None:
-        return None
-    model_dict = model.to_dict()
-    return model_dict
+    return model
