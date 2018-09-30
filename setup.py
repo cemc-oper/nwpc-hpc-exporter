@@ -23,11 +23,12 @@ setup(
     license='GPL-3.0',
 
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
+        'Development Status :: 3 - Alpha',
+        'Intended Audience :: System Administrators',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7'
+        'Programming Language :: Python :: 3.7',
+        'Topic :: System :: Systems Administration'
     ],
 
     keywords='nwpc hpc exporter',
