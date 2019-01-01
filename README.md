@@ -63,6 +63,6 @@ docker run -d -p 8101:8101 -v /some_path/disk_usage.config.yml:/etc/nwpc-hpc-exp
 
 ## LICENSE
 
-Copyright &copy; 2017-2018, Perilla Roc.
+Copyright &copy; 2017-2019, Perilla Roc.
 
 `nwpc-hpc-exporter` is licensed under [GPL v3.0](LICENSE.md)
